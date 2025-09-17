@@ -1,5 +1,5 @@
 import yaml
-from typing import Any
+from typing import Any, Optional
 from pathlib import Path
 from pydantic import ValidationError
 from config_parser.data_models import ConfigSchema
@@ -7,12 +7,12 @@ from config_parser.error import YAMLParseError, SchemaValidationError, SecretRep
 
 
 class ConfigParser:
-    def __init__(self, file_path: str):
+    def __init__(self, file_path: Path):
         """
         Initializes ConfigReader with the file path.
         """
         self.file_path = file_path
-        self.__config: ConfigSchema = None
+        self.__config: Optional[ConfigSchema] = None
 
     def read_config(self) -> None:
         """

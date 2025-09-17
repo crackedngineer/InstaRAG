@@ -7,11 +7,11 @@ def read_root():
     return {"Hello": "World"}
 
 @app_router.get("/healthz")
-def read_root():
+def healthz():
     return {"result": "ok"}
 
 @app_router.get("/readz")
-def read_root():
+def readz():
     return {"result": "ok"}
 
 @app_router.get("/app/details")

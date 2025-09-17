@@ -3,21 +3,19 @@ name = "InstaRAG"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Subhomoy Roy Choudhury",email = "subhomoyrchoudhury@gmail.com"}
+    { name = "Subhomoy Roy Choudhury", email = "subhomoyrchoudhury@gmail.com" }
 ]
 readme = "README.md"
 requires-python = ">=3.11,<4.0.0"
 dependencies = [
-    "pydantic (==2.10.1)",
-    "pyyaml (>=6.0.2,<7.0.0)",
-    "pypdf (>=5.1.0,<6.0.0)",
-    "rich (>=13.9.4,<14.0.0)",
-    "llm-gateway-core @ git+https://github.com/LLM-Gateway-ORG/llm-gateway-core.git",
-    "fastapi (>=0.115.8,<0.116.0)",
-    "uvicorn (>=0.34.0,<0.35.0)"
+    "pydantic==2.10.1",
+    "pyyaml>=6.0.2,<7.0.0",
+    "pypdf>=5.1.0,<6.0.0",
+    "rich>=13.9.4,<14.0.0",
+    "fastapi>=0.115.8,<0.116.0",
+    "uvicorn>=0.34.0,<0.35.0"
 ]
 
-
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

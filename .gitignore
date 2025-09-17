@@ -156,3 +156,6 @@ dmypy.json
 cython_debug/
 
 docs/*
+
+# Sample Config file
+test.yml
