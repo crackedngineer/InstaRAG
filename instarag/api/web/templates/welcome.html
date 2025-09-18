@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InstaRAG – Welcome</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="intro">
+      <img src="/static/img/logo.png" alt="InstaRAG Logo" class="logo" />
+      <h1>Welcome to {{ request.app.state.configuration.title }}</h1>
+    </div>
+    <div class="description">
+      <p class="description-content">
+        {{ request.app.state.configuration.description }}
+      </p>
+      <p class="tags">
+        {{ request.app.state.configuration.tags | join(" • ") }}
+      </p>
+    </div>
+
+    <div class="buttons">
+      <a href="/api/docs" class="btn">SwaggerUI</a>
+      <a href="/api/redoc" class="btn">Redoc</a>
+      <!-- <a
+        href="https://github.com/crackedngineer/InstaRAG/blob/master/README.md"
+        class="btn"
+        >Full Documentation</a
+      >
+      <a
+        href="https://github.com/crackedngineer/InstaRAG"
+        target="_blank"
+        class="btn"
+        >GitHub</a
+      > -->
+    </div>
+
+    <footer>
+      <p>⚡ Powered by <a href="https://github.com/crackedngineer/InstaRAG" class="footer-product-name" target="_blank">InstaRAG</a> • Fast, Lightweight & AI-Ready</p>
+    </footer>
+  </body>
+</html>
