@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["instarag"]
+packages = ["src/instarag"]
 
 [build-system]
 requires = ["hatchling"]
