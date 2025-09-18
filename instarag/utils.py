@@ -12,12 +12,12 @@ def parse_config(config_path: Path):
         print(f"Configuration Error: {e}")
 
 
-def load_source(details: list) -> list:
-    chunk = list()
-    for details in details:
-        processor = get_source_processor(details.type, details.data)
-        chunk.extend(processor.process())
-    return chunk
+# def load_source(details: list) -> list:
+#     chunk = list()
+#     for details in details:
+#         processor = get_source_processor(details.type, details.data)
+#         chunk.extend(processor.process())
+#     return chunk
 
 
 def setup_vector_store():
@@ -36,7 +36,7 @@ def store_embedding(embedding, vector_store, chunks):
     pass
 
 
-def setup_model(model_detail: dict, embedded_obj):
-    return Chat(
-        model_name=model_detail.model_name, api_key=model_detail.credentials.api_key
-    )
+# def setup_model(model_detail: dict, embedded_obj):
+#     return Chat(
+#         model_name=model_detail.model_name, api_key=model_detail.credentials.api_key
+#     )

@@ -158,4 +158,5 @@ cython_debug/
 docs/*
 
 # Sample Config file
-test.yml
+test.yaml
+instarag.config.yaml
