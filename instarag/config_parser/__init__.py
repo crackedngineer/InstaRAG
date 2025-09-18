@@ -77,7 +77,9 @@ class ConfigParser:
         Fetches a specific configuration value using dot notation.
         """
         keys = key.split(".")
-        value = self.config
+        if self.__config is None:
+            return default
+        value = self.__config.model_dump()
         try:
             for k in keys:
                 value = value[k]

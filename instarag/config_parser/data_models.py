@@ -20,7 +20,7 @@ class ModelConfig(BaseModel):
 class Settings(BaseModel):
     logo: Optional[str] = ""
     readme: Optional[str] = ""
-    theme: str = Field(default="system", pattern="^(light|dark|system)$")
+    mode: str = Field(default="system", pattern="^(light|dark|system)$")
     type: Optional[str] = None
 
 
@@ -40,8 +40,9 @@ class ConfigSchema(BaseModel):
     description: str
     version: str
     authors: List[AuthorConfig]
+    tags: List[str]
 
-    settings: Settings
+    theme: Settings
     secrets: dict
     models: ModelConfig
     source: List[SourceConfig]
