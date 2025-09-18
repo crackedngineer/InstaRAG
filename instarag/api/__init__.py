@@ -1,11 +1,16 @@
-import logging
+import os
 import sys
-from rich.console import Console
-from fastapi import FastAPI
+from pathlib import Path
+import logging.config
 from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from rich.console import Console
 
-from .router import app_router
-from .utils import get_private_ip, get_public_ip
+from .router import app_router as main_router
+from .web.routes import router as web_router
+from .utils import get_private_ip
+from .constants import DEFAULT_APP_DETAILS
 
 console = Console()
 
@@ -63,22 +68,17 @@ logger = logging.getLogger("uvicorn")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Handles startup and shutdown events using FastAPI lifespan."""
-    
+
     port = app.state.port
     private_ip = await get_private_ip()
-    public_ip = await get_public_ip()
 
     console.rule("[bold blue]🚀 InstaRAG Server Startup[/bold blue]")
     console.print("[bold green]✅ Application startup complete.[/bold green]")
     console.print("\n[bold cyan]🌍 Access the API at:[/bold cyan]")
-    console.print(f"🔹 [bold white]Local:[/bold white]     http://localhost:{port}")
+    console.print(f"🔹 [bold white]Local:[/bold white]      http://localhost:{port}")
     if private_ip:
         console.print(
-            f"🔹 [bold white]Private:[/bold white]   http://{private_ip}:{port}"
-        )
-    if public_ip:
-        console.print(
-            f"🔹 [bold white]Public:[/bold white]    http://{public_ip}:{port} (If exposed)"
+            f"🔹 [bold white]Network:[/bold white]    http://{private_ip}:{port}"
         )
     console.print(
         "\n[bold yellow]🚀 Welcome to InstaRAG! Your AI-powered retrieval system is ready.[/bold yellow]\n"
@@ -104,13 +104,23 @@ async def lifespan(app: FastAPI):
 # Attach lifespan event to FastAPI
 # Note :- Need to add license_info
 app = FastAPI(
-    title="InstaRAG API",
-    description="🚀 AI-powered Retrieval-Augmented Generation (RAG) system.",
-    version="1.0.0",
+    title=DEFAULT_APP_DETAILS.TITLE.value,
+    description=DEFAULT_APP_DETAILS.DESCRIPTION.value,
+    version=DEFAULT_APP_DETAILS.VERSION.value,
     docs_url="/api/docs",  # Change Swagger UI URL
     redoc_url="/api/redoc",  # Change ReDoc URL
     openapi_url="/api/openapi.json",  # Change OpenAPI JSON URL
     lifespan=lifespan,
 )
 
-app.include_router(app_router, prefix="/api", tags=["Backend Service"])
+# Include include static files
+BASE_DIR = Path(__file__).resolve().parent
+app.mount(
+    "/static",
+    StaticFiles(directory=str(BASE_DIR / os.path.join("web", "static"))),
+    name="static",
+)
+
+
+app.include_router(web_router, prefix="", tags=["Web Interface"])
+app.include_router(main_router, prefix="/api", tags=["Backend Service"])

@@ -12,12 +12,3 @@ async def get_private_ip():
         return private_ip
     except Exception:
         return None
-
-
-async def get_public_ip():
-    """Get the public IP address of the machine (requires internet)."""
-    try:
-        response = requests.get("https://api64.ipify.org?format=text", timeout=3)
-        return response.text
-    except requests.RequestException:
-        return None
