@@ -4,8 +4,8 @@ import argparse
 from rich.console import Console
 import uvicorn
 
-from api import app
-from utils import (
+from .api import app
+from .utils import (
     parse_config,
     # load_source,
     setup_vector_store,
@@ -13,7 +13,7 @@ from utils import (
     store_embedding,
     # setup_model,
 )
-from helpers import find_available_port
+from .helpers import find_available_port
 
 # Rich
 console = Console()
@@ -49,9 +49,9 @@ class InstaRAGManager:
             if not config:
                 return
 
-            # chunks = self.run_task("Loading Source Data", load_source, config.source)
-            # if not chunks:
-            #     return
+            chunks = self.run_task("Loading Source Data", load_source, config.source)
+            if not chunks:
+                return
 
             vector_store = self.run_task("Setting Up Vector Store", setup_vector_store)
             # if not vector_store:
