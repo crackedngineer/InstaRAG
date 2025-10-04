@@ -26,7 +26,7 @@ from langchain_community.document_loaders.parsers.audio import OpenAIWhisperPars
 from langchain_community.vectorstores import Qdrant
 
 from .constants import ProcessorType
-from .helpers import get_content_type
+from .helper import get_content_type
 
 # from langchain_community.embeddings import OllamaEmbeddings
 # from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -41,6 +41,8 @@ class BaseSourceProcessor(ABC):
 
     def process(self, **kwargs):
         document = self.load(**kwargs)
+        if document is None:
+            return []
         text_splitter = RecursiveCharacterTextSplitter(
             separators=["\n\n", "\n", " ", ""],
             chunk_size=1000,
@@ -53,39 +55,39 @@ class BaseSourceProcessor(ABC):
 
 
 class FileProcessor(BaseSourceProcessor):
-    def __init__(self, fileLocation):
-        self.fileLocation = Path(fileLocation).resolve()
+    def __init__(self, file_location):
+        self.file_location = Path(file_location).resolve()
 
     def load(self):
-        contentType = get_content_type(self.fileLocation)
+        contentType = get_content_type(str(self.file_location))
         # matching the file types for loaders
         if contentType == "text/plain":
-            loader = TextLoader(self.fileLocation)
+            loader = TextLoader(self.file_location)
             document = loader.load()
         elif contentType == "application/pdf":
-            loader = PyPDFLoader(self.fileLocation)
+            loader = PyPDFLoader(self.file_location)
             document = loader.load_and_split()
         elif (
             contentType
             == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ):
-            loader = Docx2txtLoader(self.fileLocation)
+            loader = Docx2txtLoader(self.file_location)
             document = loader.load()
         elif (
             contentType
             == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         ):
-            loader = UnstructuredExcelLoader(self.fileLocation)
+            loader = UnstructuredExcelLoader(self.file_location)
             document = loader.load()
         elif contentType == "text/csv":
-            loader = CSVLoader(self.fileLocation)
+            loader = CSVLoader(self.file_location)
             document = loader.load()
         elif (
             contentType == "application/vnd.ms-powerpoint"
             or contentType
             == "application/vnd.openxmlformats-officedocument.presentationml.presentation"
         ):
-            loader = UnstructuredPowerPointLoader(self.fileLocation)
+            loader = UnstructuredPowerPointLoader(self.file_location)
             document = loader.load()
         else:
             # for unsupported file type
@@ -98,38 +100,43 @@ class WebContentProcessor(BaseSourceProcessor):
     def __init__(self, url):
         self.url = url
 
-    def process(self):
+    def load(self):
         loader = WebBaseLoader(self.url)
         data = loader.load()
 
         return data
 
 
-class YouTubeChatProcessor(BaseSourceProcessor):
-    def __init__(self, url, save_dir, local=False):
-        self.url = url
-        self.save_dir = save_dir
-        self.local = local
+# class YouTubeChatProcessor(BaseSourceProcessor):
+#     def __init__(self, url, save_dir, local=False):
+#         self.url = url
+#         self.save_dir = save_dir
+#         self.local = local
 
-    def load(self):
-        if self.local:
-            loader = GenericLoader(
-                YoutubeAudioLoader([self.url], self.save_dir),
-                # OpenAIWhisperParserLocal(),
-            )
-        else:
-            loader = GenericLoader(
-                YoutubeAudioLoader([self.url], self.save_dir), OpenAIWhisperParser()
-            )
-        docs = loader.load()
-        return docs
+#     def load(self):
+#         if self.local:
+#             loader = GenericLoader(
+#                 YoutubeAudioLoader([self.url], self.save_dir),
+#                 OpenAIWhisperParserLocal(),
+#             )
+#         else:
+#             loader = GenericLoader(
+#                 YoutubeAudioLoader([self.url], self.save_dir), OpenAIWhisperParser()
+#             )
+#         docs = loader.load()
+#         return docs
 
 
-def get_source_processor(type: str, source_data: str) -> BaseSourceProcessor:
+def get_source_processor(type: str, data: dict) -> BaseSourceProcessor:
     if type == ProcessorType.DOCUMENT.value:
-        return FileProcessor(fileLocation=source_data)
+        file_location = data.get("path")
+        return FileProcessor(file_location=file_location)
     elif type == ProcessorType.WEB.value:
-        return WebContentProcessor(url=source_data)
-    elif type == ProcessorType.YOUTUBE.value:
-        return YouTubeChatProcessor(url=source_data)
+        url = data.get("url")
+        return WebContentProcessor(url=url)
+    # elif type == ProcessorType.YOUTUBE.value:
+    #     url = data.get("url")
+    #     save_dir = data.get("save_dir", "./")
+    #     local = data.get("local", False)
+    #     return YouTubeChatProcessor(url=url, save_dir=save_dir, local=local)
     raise ValueError("Invalid Source")

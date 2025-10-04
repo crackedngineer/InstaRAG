@@ -25,9 +25,8 @@ class Settings(BaseModel):
 
 
 class SourceConfig(BaseModel):
-    type: str
-    data: str
-
+    type: str = Field(..., description="Type of the source, e.g., 'pdf', 'web', 'text'")
+    data: dict = Field(..., description="Data related to the source, e.g., file path or URL")
 
 class AuthorConfig(BaseModel):
     name: str

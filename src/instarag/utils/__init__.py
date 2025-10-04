@@ -1,4 +1,7 @@
 from pathlib import Path
+from typing import List
+from instarag.config_parser.data_models import SourceConfig
+
 from ..config_parser import ConfigParser
 from ..config_parser.error import ConfigReaderError
 from .ingest import get_source_processor
@@ -12,10 +15,10 @@ def parse_config(config_path: Path):
         print(f"Configuration Error: {e}")
 
 
-def load_source(details: list) -> list:
+def load_source(details: List[SourceConfig]) -> list:
     chunk = list()
-    for details in details:
-        processor = get_source_processor(details.type, details.data)
+    for detail in details:
+        processor = get_source_processor(detail.type, detail.data)
         chunk.extend(processor.process())
     return chunk
 

@@ -4,16 +4,16 @@ import argparse
 from rich.console import Console
 import uvicorn
 
-from .api import app
-from .utils import (
+from instarag.api import app
+from instarag.utils import (
     parse_config,
-    # load_source,
+    load_source,
     setup_vector_store,
     setup_embedding,
     store_embedding,
     # setup_model,
 )
-from .helpers import find_available_port
+from instarag.helpers import find_available_port
 
 # Rich
 console = Console()
