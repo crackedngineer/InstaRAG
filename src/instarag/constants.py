@@ -1,1 +1,0 @@
-DEFAULT_CONFIG_FILENAME = "instarag.config.yml"

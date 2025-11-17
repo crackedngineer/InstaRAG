@@ -8,7 +8,7 @@
       "name": "Python Debugger: Main File with Arguments",
       "type": "debugpy",
       "request": "launch",
-      "program": "${workspaceFolder}/src/instarag/main.py",
+      "program": "${workspaceFolder}/src/instarag/__main__.py",
       "args": ["run", "-f", "instarag.config.yaml"],
       "console": "integratedTerminal"
     }

@@ -6,20 +6,8 @@ authors = [
     { name = "Subhomoy Roy Choudhury", email = "subhomoyrchoudhury@gmail.com" },
 ]
 readme = "README.md"
-requires-python = ">=3.11,<4.0.0"
-dependencies = [
-    "fastapi>=0.115.8,<0.116.0",
-    "jinja2>=3.1.6",
-    "langchain (>=0.3.17,<0.4.0)",
-    "langchain-community (>=0.3.16,<0.4.0)",
-    "pydantic==2.10.1",
-    "pypdf>=5.1.0,<6.0.0",
-    "pypdf (>=5.2.0,<6.0.0)",
-    "pyyaml>=6.0.2,<7.0.0",
-    "requests>=2.32.5",
-    "rich>=13.9.4,<14.0.0",
-    "uvicorn>=0.34.0,<0.35.0"
-]
+requires-python = ">=3.10,<4.0.0"
+dependencies = ["fastapi (>=0.121.2,<0.122.0)", "jinja2 (>=3.1.6,<4.0.0)", "langchain (>=1.0.7,<2.0.0)", "langchain-community (>=0.4.1,<0.5.0)", "pydantic (>=2.12.4,<3.0.0)", "pypdf (>=6.3.0,<7.0.0)", "pyyaml (>=6.0.3,<7.0.0)", "requests (>=2.32.5,<3.0.0)", "rich (>=14.2.0,<15.0.0)", "uvicorn (>=0.38.0,<0.39.0)"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/instarag"]

@@ -1,0 +1,1 @@
+THEMES_LIST = ["light", "dark", "system"]

@@ -1,4 +1,4 @@
-from ..base import BaseEnum
+from ..core.enum import BaseEnum
 
 
 class ModesEnum(BaseEnum):
