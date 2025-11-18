@@ -61,18 +61,16 @@ class ModelDetailsConfig(BaseModel):
     model_name: Optional[str] = Field(None, description="Name of the model")
 
 
-class ModelConfig(BaseModel):
-    chat: ModelDetailsConfig = Field(..., description="Chat model configuration")
-    embeddings: ModelDetailsConfig = Field(..., description="Embeddings model configuration")
-    image_generation: Optional[ModelDetailsConfig] = Field(None, description="Image generation model configuration")
-
 
 class SourceConfig(BaseModel):
     type: str = Field(..., description="Type of the source, e.g., 'pdf', 'web', 'text'")
-    data: str = Field(
+    params: List[str] = Field(
         ..., description="Data related to the source, e.g., file path or URL"
     )
-
+    
+class VectorStoreConfig(BaseModel):
+    type: str = Field(..., description="Type of the vector store, e.g., 'inmemory', 'chroma'")
+    params: Optional[dict] = Field(default_factory=dict, description="Parameters for the vector store")
 
 class ConfigSchema(BaseModel):
     name: str = Field(..., description="Name of the application")
@@ -84,5 +82,9 @@ class ConfigSchema(BaseModel):
     logo: Optional[str] = Field(default="", description="Logo of the application")
     readme: Optional[str] = Field(default="", description="Readme file of the application")
     theme: str = Field(default="system", pattern=f"^({'|'.join(THEMES_LIST)})$", description="Theme of the application")
-    models: ModelConfig = Field(..., description="Model configurations")
-    source: List[SourceConfig] = Field(..., description="List of source configurations")
+    sources: List[SourceConfig] = Field(..., description="List of source configurations")
+    
+    vector_store: VectorStoreConfig = Field(..., description="Vector store configuration")
+    chat_model: ModelDetailsConfig = Field(..., description="Chat model configuration")
+    embedding_model: ModelDetailsConfig = Field(..., description="Embeddings model configuration")
+    image_generation_model: Optional[ModelDetailsConfig] = Field(None, description="Image generation model configuration")

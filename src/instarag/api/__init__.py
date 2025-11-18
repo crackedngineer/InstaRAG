@@ -5,14 +5,13 @@ import logging.config
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from rich.console import Console
 
+from instarag.settings import console
 from .router import app_router as main_router
 from .web.routes import router as web_router
 from .utils import get_private_ip
 from .constants import DEFAULT_APP_DETAILS
 
-console = Console()
 
 # Custom log format for Uvicorn
 LOG_CONFIG = {

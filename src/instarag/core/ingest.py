@@ -1,6 +1,5 @@
 import mimetypes
 from abc import ABC, abstractmethod
-from enum import Enum
 from pathlib import Path
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -12,26 +11,9 @@ from langchain_community.document_loaders import (
     UnstructuredPowerPointLoader,
     WebBaseLoader,
 )
-from langchain_community.document_loaders.blob_loaders.youtube_audio import (
-    YoutubeAudioLoader,
-)
 from langchain_community.document_loaders.csv_loader import CSVLoader
-from langchain_community.document_loaders.generic import GenericLoader
 
-# from langchain_community.document_loaders.parsers import OpenAIWhisperParser,OpenAIWhisperParserLocal
-# from langchain.document_loaders.parsers.audio import (
-#     OpenAIWhisperParser,
-#     OpenAIWhisperParserLocal,
-# )
-from langchain_community.document_loaders.parsers.audio import OpenAIWhisperParser
-from langchain_community.vectorstores import Qdrant
-
-from .constants import ProcessorType
-
-# from langchain_community.embeddings import OllamaEmbeddings
-# from langchain_google_genai import GoogleGenerativeAIEmbeddings
-# from streamlit import secrets, error, stop
-# import psutil
+from ..utils.enum import ProcessorType
 
 def get_content_type(filepath: str) -> str:
     """
@@ -86,7 +68,6 @@ class FileProcessor(BaseSourceProcessor):
 
     def load(self):
         contentType = get_content_type(str(self.file_location))
-        # matching the file types for loaders
         if contentType == "text/plain":
             loader = TextLoader(self.file_location)
             document = loader.load()
@@ -132,37 +113,11 @@ class WebContentProcessor(BaseSourceProcessor):
 
         return data
 
-
-# class YouTubeChatProcessor(BaseSourceProcessor):
-#     def __init__(self, url, save_dir, local=False):
-#         self.url = url
-#         self.save_dir = save_dir
-#         self.local = local
-
-#     def load(self):
-#         if self.local:
-#             loader = GenericLoader(
-#                 YoutubeAudioLoader([self.url], self.save_dir),
-#                 OpenAIWhisperParserLocal(),
-#             )
-#         else:
-#             loader = GenericLoader(
-#                 YoutubeAudioLoader([self.url], self.save_dir), OpenAIWhisperParser()
-#             )
-#         docs = loader.load()
-#         return docs
-
-
-def get_source_processor(type: str, data: dict) -> BaseSourceProcessor:
-    if type == ProcessorType.DOCUMENT.value:
-        file_location = data.get("path")
+def get_source_processor(type: str, **kwargs) -> BaseSourceProcessor:
+    if type == ProcessorType.FILE.value:
+        file_location = kwargs.get("data")
         return FileProcessor(file_location=file_location)
     elif type == ProcessorType.WEB.value:
-        url = data.get("url")
+        url = kwargs.get("data")
         return WebContentProcessor(url=url)
-    # elif type == ProcessorType.YOUTUBE.value:
-    #     url = data.get("url")
-    #     save_dir = data.get("save_dir", "./")
-    #     local = data.get("local", False)
-    #     return YouTubeChatProcessor(url=url, save_dir=save_dir, local=local)
     raise ValueError("Invalid Source")

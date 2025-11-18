@@ -13,7 +13,7 @@ class ConfigParser:
         """
         self.file_path = file_path
         self.__config: Optional[ConfigSchema] = None
-        
+
     @property
     def file_path(self) -> Path:
         return self._file_path
@@ -56,8 +56,6 @@ class ConfigParser:
         except ValidationError as e:
             raise SchemaValidationError(e)
 
-
-
     def get_value(self, key: str, default=None) -> Any:
         """
         Fetches a specific configuration value using dot notation.
@@ -72,6 +70,6 @@ class ConfigParser:
         except (KeyError, TypeError):
             return default
         return value
-    
+
     def get_config(self):
         return self.__config

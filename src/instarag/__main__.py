@@ -2,18 +2,13 @@ import sys
 import argparse
 import uvicorn
 from typing import List
-from rich.console import Console
-from rich.spinner import Spinner
 from rich.text import Text
 
-
+from instarag.settings import console
 from instarag.api import app
 from instarag.core.helpers import find_available_port
-from instarag.utils.config_parser import ConfigParser, SourceConfig
-from instarag.utils.ingest import get_source_processor
-
-console = Console()
-
+from instarag.core.config_parser import ConfigParser, SourceConfig
+from instarag.core.ingest import get_source_processor
 
 class InstaRAGManager:
     def __init__(self, config_path: str, port: int = 0):
@@ -50,8 +45,7 @@ class InstaRAGManager:
         Multiple PDF store and retrival technique
         Reference :- https://colab.research.google.com/drive/1gyGZn_LZNrYXYXa-pltFExbptIe7DAPe?usp=sharing
         """
-        import time
-        time.sleep(10)
+        pass
 
     @run_task("Setting Up Embeddings")
     def setup_embedding(self):
@@ -61,8 +55,9 @@ class InstaRAGManager:
     def load_source(self, details: List[SourceConfig]):
         chunk = list()
         for detail in details:
-            processor = get_source_processor(detail.type, detail.data)
-            chunk.extend(processor.process())
+            for file_location in detail.params:
+                processor = get_source_processor(detail.type, data=file_location)
+                chunk.extend(processor.process())
         return chunk
 
     def initialize(self) -> None:
@@ -77,12 +72,12 @@ class InstaRAGManager:
                 if config is None:
                     return
                 
-                # chunks = self.load_source(config.source)
-                # if not chunks:
-                #     return
+                chunks = self.load_source(config.sources)
+                if not chunks:
+                    return
 
-                vector_store = self.setup_vector_store()
                 embedding = self.setup_embedding()
+                vector_store = self.setup_vector_store()
 
                 # embedded_obj = self.store_embedding(embedding, vector_store, chunks)
                 # ai_model = self.setup_model(config.models.chat, embedded_obj)
